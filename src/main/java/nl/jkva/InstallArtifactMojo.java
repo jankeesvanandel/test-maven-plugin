@@ -13,7 +13,6 @@ import org.sonatype.aether.RepositorySystem;
 import org.sonatype.aether.RepositorySystemSession;
 import org.sonatype.aether.artifact.Artifact;
 import org.sonatype.aether.repository.RemoteRepository;
-import org.twdata.maven.mojoexecutor.MojoExecutor;
 
 import static org.twdata.maven.mojoexecutor.MojoExecutor.*;
 
@@ -87,10 +86,8 @@ public class InstallArtifactMojo extends AbstractMojo {
 
     public void execute()
             throws MojoExecutionException, MojoFailureException {
-        //Workaround for having a ${project.basedir} in a project-less mojo. This pom.xml does not exist
-        mavenProject.setFile(new File(baseDirectory, "pom.xml"));
-        mavenProject.getProperties().setProperty("project.build.sourceEncoding", "UTF-8");
-        getLog().error("" + baseDirectory);
+        MavenProjectFaker.fakeMavenProject(mavenProject, baseDirectory);
+
 
         File file = new File(baseDirectory, "config.xml");
         List<XmlReader.ArtifactConfig> configs = XmlReader.listAllArtifacts(file);
